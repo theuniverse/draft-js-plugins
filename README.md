@@ -2,7 +2,7 @@
 
 ![Draft JS Plugins Logo](https://dl.dropboxusercontent.com/u/40735/draft-js-plugins.svg)
 
-High quality plugins with great UX on to of [DraftJS](https://github.com/facebook/draft-js).
+High quality plugins with great UX on top of [DraftJS](https://github.com/facebook/draft-js).
 
 ## Available Plugins
 
@@ -97,18 +97,12 @@ Feel free to copy any of the existing plugins as a starting point. Feel free to 
 
 More documentation is coming soon…
 
-## Development
-
-You must have [Node.js v5](https://nodejs.org/en/download/package-manager/) or later installed to develop DraftJS plugins.
-
-```sh
-npm install
-cd docs
-npm install
-npm start
-```
 ## Discussion and Support
 Join the channel #plugin-editor after signing into the DraftJS [Slack organization](https://draftjs.herokuapp.com)!
+
+## Development
+
+Check out our [Contribution Guide](https://github.com/draft-js-plugins/draft-js-plugins/blob/master/CONTRIBUTING.md).
 
 ## License
 

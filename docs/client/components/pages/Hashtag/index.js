@@ -4,15 +4,21 @@ import AlternateContainer from '../../shared/AlternateContainer';
 import Heading from '../../shared/Heading';
 import styles from './styles.css';
 import Code from '../../shared/Code';
+import InlineCode from '../../shared/InlineCode';
 import SimpleHashtagEditor from './SimpleHashtagEditor';
 import CustomHashtagEditor from './CustomHashtagEditor';
 import simpleExampleCode from '!!../../../loaders/prism-loader?language=javascript!./SimpleHashtagEditor';
+import simpleExampleEditorStylesCode from '!!../../../loaders/prism-loader?language=css!./SimpleHashtagEditor/editorStyles.css';
 import customExampleCode from '!!../../../loaders/prism-loader?language=javascript!./CustomHashtagEditor';
-import customExampleStylesCode from '!!../../../loaders/prism-loader?language=css!./CustomHashtagEditor/styles.css';
+import customExampleEditorStylesCode from '!!../../../loaders/prism-loader?language=css!./CustomHashtagEditor/editorStyles.css';
+import customExampleHashtagStylesCode from '!!../../../loaders/prism-loader?language=css!./CustomHashtagEditor/hashtagStyles.css';
 import gettingStarted from '!!../../../loaders/prism-loader?language=javascript!./gettingStarted';
+import webpackConfig from '!!../../../loaders/prism-loader?language=javascript!./webpackConfig';
+import webpackImport from '!!../../../loaders/prism-loader?language=javascript!./webpackImport';
 import SocialBar from '../../shared/SocialBar';
 import NavBar from '../../shared/NavBar';
 import Separator from '../../shared/Separator';
+import ExternalLink from '../../shared/Link';
 
 export default class App extends Component {
   render() {
@@ -27,6 +33,35 @@ export default class App extends Component {
           <Heading level={ 2 }>Getting Started</Heading>
           <Code code="npm install draft-js-hashtag-plugin --save" />
           <Code code={ gettingStarted } name="gettingStarted.js" />
+          <Heading level={ 3 }>Importing the default styles</Heading>
+          <p>
+            The plugin ships with a default styling available at this location in the installed package:
+            &nbsp;
+            <InlineCode code={ 'node_modules/draft-js-hashtag-plugin/lib/plugin.css' } />
+          </p>
+          <Heading level={ 4 }>Webpack Usage</Heading>
+          <ul className={ styles.list }>
+            <li className={ styles.listEntry }>
+              1. Install Webpack loaders:
+              &nbsp;
+              <InlineCode code={ 'npm i style-loader css-loader --save-dev' } />
+            </li>
+            <li className={ styles.listEntry }>
+              2. Add the below section to Webpack config (if your config already has a loaders array, simply add the below loader object to your existing list.
+              <Code code={ webpackConfig } className={ styles.guideCodeBlock } />
+            </li>
+            <li className={ styles.listEntry }>
+              3. Add the below import line to your component to tell Webpack to inject the style to your component.
+              <Code code={ webpackImport } className={ styles.guideCodeBlock } />
+            </li>
+            <li className={ styles.listEntry }>
+              4. Restart Webpack.
+            </li>
+          </ul>
+          <Heading level={ 4 }>Browserify Usage</Heading>
+          <p>
+            Please help, by submiting a Pull Request to the <ExternalLink href="https://github.com/draft-js-plugins/draft-js-plugins/blob/master/docs/client/components/pages/Hashtag/index.js">documention</ExternalLink>.
+          </p>
         </AlternateContainer>
         <Container>
           <Heading level={ 2 }>Configuration Parameters</Heading>
@@ -42,12 +77,14 @@ export default class App extends Component {
           <Heading level={ 2 }>Simple Example</Heading>
           <SimpleHashtagEditor />
           <Code code={ simpleExampleCode } name="SimpleHashtagEditor.js" />
+          <Code code={ simpleExampleEditorStylesCode } name="editorStyles.css" />
         </Container>
         <Container>
           <Heading level={ 2 }>Themed Hashtag Example</Heading>
           <CustomHashtagEditor />
           <Code code={ customExampleCode } name="CustomHashtagEditor.js" />
-          <Code code={ customExampleStylesCode } name="styles.css" />
+          <Code code={ customExampleHashtagStylesCode } name="hashtagStyles.css" />
+          <Code code={ customExampleEditorStylesCode } name="editorStyles.css" />
         </Container>
         <SocialBar />
       </div>

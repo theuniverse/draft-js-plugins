@@ -1,55 +1,53 @@
-/**
- * The main editor c;omponent
- */
-
 import React, { Component } from 'react';
 import {
   Editor,
   EditorState,
-  getDefaultKeyBinding,
-  KeyBindingUtil,
 } from 'draft-js';
-import createCompositeDecorator from '../utils/createCompositeDecorator';
-import moveSelectionToEnd from '../utils/moveSelectionToEnd';
-import moveToEndOfSelectedBlock from '../modifiers/moveToEndOfSelectedBlock';
-import moveToStartOfSelectedBlock from '../modifiers/moveToStartOfSelectedBlock';
-import { List } from 'immutable';
 
-export default class PluginEditor extends Component {
+import createCompositeDecorator from './createCompositeDecorator';
+import moveSelectionToEnd from './moveSelectionToEnd';
+import proxies from './proxies';
+import * as defaultKeyBindingPlugin from './defaultKeyBindingPlugin';
 
-  // TODO add flow types & propTypes - since it's a library and people might not use flow we want to have both
+/**
+ * The main editor component
+ */
+class PluginEditor extends Component {
+
+  static propTypes = {
+    editorState: React.PropTypes.object.isRequired,
+    onChange: React.PropTypes.func.isRequired,
+    plugins: React.PropTypes.array,
+    defaultKeyBindings: React.PropTypes.bool,
+  };
+
+  static defaultProps = {
+    defaultKeyBindings: true,
+    plugins: [],
+  };
 
   constructor(props) {
     super(props);
-    this.plugins = List(props.plugins)
-      .filter((plugin) => plugin.pluginProps !== undefined)
-      .map((plugin) => plugin.pluginProps)
-      .toArray();
-    const compositeDecorator = createCompositeDecorator(this.plugins, this.getEditorState, this.onChange);
 
-    // TODO consider triggering an onChange here to make sure the editorState is in sync
-    // with the outer Editor context
-    const editorState = EditorState.set(this.props.editorState, { decorator: compositeDecorator });
-    this.editorState = moveSelectionToEnd(editorState);
-  }
-
-  componentWillMount() {
-    // Makes sure the editorState of the wrapping component is in sync with the
-    // internal one, because we added the decorator in the constructor.
-    if (this.props.onChange) {
-      this.props.onChange(this.editorState);
+    // attach proxy methods like `focus` or `blur`
+    for (const method of proxies) {
+      this[method] = (...args) => (
+        this.refs.editor[method](...args)
+      );
     }
   }
 
-  componentWillReceiveProps(props) {
-    this.editorState = props.editorState;
+  componentWillMount() {
+    const compositeDecorator = createCompositeDecorator(this.props.plugins, this.getEditorState, this.onChange);
+    const editorState = EditorState.set(this.props.editorState, { decorator: compositeDecorator });
+    this.onChange(moveSelectionToEnd(editorState));
   }
 
   // Cycle through the plugins, changing the editor state with what the plugins
   // changed (or didn't)
   onChange = (editorState) => {
     let newEditorState = editorState;
-    this.plugins.forEach((plugin) => {
+    this.props.plugins.forEach((plugin) => {
       if (plugin.onChange) {
         newEditorState = plugin.onChange(newEditorState);
       }
@@ -60,149 +58,104 @@ export default class PluginEditor extends Component {
     }
   };
 
-  onDownArrow = (keyboardEvent) => {
-    // TODO allow to provide a custom onDownArrow
+  getEditorState = () => this.props.editorState;
 
-    this.plugins.map((plugin) => {
-      if (plugin.onDownArrow) {
-        plugin.onDownArrow(keyboardEvent);
-      }
-
-      return undefined;
+  createEventHooks = (methodName, plugins) => (...args) => {
+    const newArgs = [].slice.apply(args);
+    newArgs.push({
+      getEditorState: this.getEditorState,
+      setEditorState: this.onChange,
     });
-  };
-
-  onUpArrow = (keyboardEvent) => {
-    // TODO allow to provide a custom onUpArrow
-
-    this.plugins.map((plugin) => {
-      if (plugin.onUpArrow) {
-        plugin.onUpArrow(keyboardEvent);
-      }
-
-      return undefined;
-    });
-  };
-
-  onEscape = (keyboardEvent) => {
-    // TODO allow to provide a custom onEscape
-
-    this.plugins.map((plugin) => {
-      if (plugin.onEscape) {
-        plugin.onEscape(keyboardEvent);
-      }
-
-      return undefined;
-    });
-  };
-
-  getEditorState = () => this.editorState;
-
-  handleKeyCommand = (command) => {
-    // TODO optimize to break after the first one
-    let preventDefaultBehaviour = this.plugins
-      .map((plugin) => {
-        if (plugin.handleKeyCommand) {
-          const handled = plugin.handleKeyCommand(command);
-          if (handled === true) {
-            return handled;
-          }
-        }
-
-        return undefined;
-      })
-      .find((result) => result === true);
-
-    if (command === 'plugin-editor-move-to-start') {
-      moveToStartOfSelectedBlock(this.editorState, this.props.onChange);
-      preventDefaultBehaviour = true;
-    } else if (command === 'plugin-editor-move-to-end') {
-      moveToEndOfSelectedBlock(this.editorState, this.props.onChange);
-      preventDefaultBehaviour = true;
+    for (const plugin of plugins) {
+      if (typeof plugin[methodName] !== 'function') continue;
+      const result = plugin[methodName](...newArgs);
+      if (result === true) return true;
     }
 
-    // TODO allow to provide a custom handleKeyCommand
-    return preventDefaultBehaviour === true;
+    return false;
   };
 
-  handleReturn = (keyboardEvent) => {
-    // TODO optimize to break after the first one
-    const preventDefaultBehaviour = this.plugins
-      .map((plugin) => {
-        if (plugin.handleReturn) {
-          const handled = plugin.handleReturn(keyboardEvent);
-          if (handled === true) {
-            return handled;
-          }
-        }
-
-        return undefined;
-      })
-      .find((result) => result === true);
-
-    // TODO allow to provide a custom handleReturn
-    return preventDefaultBehaviour === true;
-  };
-
-  keyBindingFn = (keyboardEvent) => {
-    // TODO optimize to break after the first one
-    let command = this.plugins
-      .map((plugin) => {
-        if (plugin.keyBindingFn) {
-          const pluginCommand = plugin.keyBindingFn(keyboardEvent);
-          if (pluginCommand) {
-            return pluginCommand;
-          }
-        }
-
-        return undefined;
-      })
-      .find((result) => result !== undefined);
-
-    if (command === undefined) {
-      if (keyboardEvent.keyCode === 37 && KeyBindingUtil.hasCommandModifier(keyboardEvent)) {
-        command = 'plugin-editor-move-to-start';
-      } else if (keyboardEvent.keyCode === 39 && KeyBindingUtil.hasCommandModifier(keyboardEvent)) {
-        command = 'plugin-editor-move-to-end';
-      }
+  createFnHooks = (methodName, plugins) => (...args) => {
+    const newArgs = [].slice.apply(args);
+    newArgs.push({
+      getEditorState: this.getEditorState,
+      setEditorState: this.onChange,
+    });
+    for (const plugin of plugins) {
+      if (typeof plugin[methodName] !== 'function') continue;
+      const result = plugin[methodName](...newArgs);
+      if (result !== undefined) return result;
     }
 
-    // TODO allow to provide a custom handleKeyCommand
-
-    return command !== undefined ? command : getDefaultKeyBinding(keyboardEvent);
+    return false;
   };
 
-  blockRendererFn = (contentBlock) => {
-    // TODO optimize to break after the first one
-    if (this.props.blockRendererFn) {
-      const result = this.props.blockRendererFn(contentBlock);
-      if (result) {
-        return result;
-      }
-    }
+  createPluginHooks = () => {
+    const pluginHooks = {};
+    const eventHookKeys = [];
+    const fnHookKeys = [];
+    const plugins = this.resolvePlugins();
 
-    return this.plugins
-      .map((plugin) => {
-        if (plugin.blockRendererFn) {
-          const result = plugin.blockRendererFn(contentBlock, this.getEditorState, this.onChange);
-          if (result) {
-            return result;
-          }
+    plugins.forEach((plugin) => {
+      Object.keys(plugin).forEach((attrName) => {
+        if (attrName === 'onChange') return;
+
+        // if `attrName` has been added as a hook key already, ignore this one
+        if (eventHookKeys.indexOf(attrName) !== -1 || fnHookKeys.indexOf(attrName) !== -1) return;
+
+        const isEventHookKey = attrName.indexOf('on') === 0 || attrName.indexOf('handle') === 0;
+        if (isEventHookKey) {
+          eventHookKeys.push(attrName);
+          return;
         }
 
-        return undefined;
-      })
-      .find((result) => result !== undefined);
+        // checks if `attrName` ends with 'Fn'
+        const isFnHookKey = (attrName.length - 2 === attrName.indexOf('Fn'));
+        if (isFnHookKey) {
+          fnHookKeys.push(attrName);
+        }
+      });
+    });
+
+    eventHookKeys.forEach((attrName) => {
+      pluginHooks[attrName] = this.createEventHooks(attrName, plugins);
+    });
+    fnHookKeys.forEach((attrName) => {
+      pluginHooks[attrName] = this.createFnHooks(attrName, plugins);
+    });
+
+    return pluginHooks;
   };
 
-  // Put the keyboard focus on the editor
-  focus = () => {
-    this.refs.editor.focus();
+  resolvePlugins = () => {
+    const plugins = this.props.plugins.slice(0);
+    if (this.props.defaultKeyBindings) {
+      plugins.push(defaultKeyBindingPlugin);
+    }
+
+    return plugins;
+  };
+
+  resolveCustomStyleMap = () => {
+    let styles = {};
+    for (const plugin of this.props.plugins) {
+      if (!plugin.customStyleMap) continue;
+      styles = {
+        ...styles,
+        ...plugin.customStyleMap,
+      };
+    }
+
+    return styles;
   };
 
   render() {
     let pluginProps = {};
-    this.plugins.forEach((plugin) => {
+
+    // This puts pluginProps and the object inside getEditorProps
+    // on the Editor component (main use case is for aria props right now)
+    // Last plugin wins right now (not ideal)
+    this.props.plugins.forEach((plugin) => {
       if (plugin.getEditorProps) {
         pluginProps = {
           ...pluginProps,
@@ -211,21 +164,20 @@ export default class PluginEditor extends Component {
       }
     });
 
+    const pluginHooks = this.createPluginHooks();
+    const customStyleMap = this.resolveCustomStyleMap();
     return (
       <Editor
-        {...pluginProps}
-        {...this.props}
+        { ...pluginProps }
+        { ...pluginHooks }
+        { ...this.props }
+        customStyleMap={ customStyleMap }
         onChange={ this.onChange }
-        editorState={ this.editorState }
-        blockRendererFn={ this.blockRendererFn }
-        handleKeyCommand={ this.handleKeyCommand }
-        keyBindingFn={ this.keyBindingFn }
-        onDownArrow={ this.onDownArrow }
-        onUpArrow={ this.onUpArrow }
-        onEscape={ this.onEscape }
-        handleReturn={ this.handleReturn }
+        editorState={ this.props.editorState }
         ref="editor"
       />
     );
   }
 }
+
+export default PluginEditor;
