@@ -1,11 +1,10 @@
 {
-  "name": "draft-js-mention-plugin",
-  "version": "0.0.4",
-  "description": "Mention Plugin for DraftJS",
+  "name": "draft-js-markup-plugin",
+  "version": "0.0.0",
+  "description": "Markup Plugin for DraftJS",
   "author": {
-    "name": "Nik Graf",
-    "email": "nik@nikgraf.com",
-    "url": "http://www.nikgraf.com"
+    "name": "Qi Xi",
+    "email": "blanchsi1990@gmail.com"
   },
   "repository": {
     "type": "git",

@@ -1,24 +1,19 @@
-# DraftJS Mention Plugin
+# DraftJS Markup Plugin
 
 *This is a plugin for the `draft-js-plugins-editor`.*
 
-This plugin allows you to add stickers to your editor!
+This plugin allows you to use markup (* for bold and _ for italic) in your editor!
 
 Usage:
 
 ```js
-import createMentionPlugin from 'draft-js-mention-plugin';
+import createMarkupPlugin from 'draft-js-markup-plugin';
 
-const mentionPlugin = createMentionPlugin({ mentions });
+const markupPlugin = createMarkupPlugin({ markups });
 ```
 
-## Importing the default styles
-
-The plugin ships with a default styling available at this location in the installed package:
-`node_modules/draft-js-mention-plugin/lib/plugin.css`.
-
 ### Webpack Usage
-Follow the steps below to import the css file by using Webpack's `style-loader` and `css-loader`. 
+Follow the steps below to import the css file by using Webpack's `style-loader` and `css-loader`.
 
 1. Install Webpack loaders: `npm install style-loader css-loader --save-dev`
 2. Add the below section to Webpack config (if your Webpack already has loaders array, simply add the below loader object(`{test:foo, loaders:bar[]}`) as an item in the array).
@@ -34,12 +29,7 @@ Follow the steps below to import the css file by using Webpack's `style-loader` 
     }
     ```
 
-3. Add the below import line to your component to tell Webpack to inject style to your component.
-
-    ```js
-    import 'draft-js-mention-plugin/lib/plugin.css';
-    ```
-4. Restart Webpack.
+3. Restart Webpack.
 
 ### Browserify Usage
 
