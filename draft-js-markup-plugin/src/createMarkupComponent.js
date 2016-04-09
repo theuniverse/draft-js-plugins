@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default (style: string) {
+export default (style: string) => {
    return class MentionSearch extends Component {
       render() {
          return (

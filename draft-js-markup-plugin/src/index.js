@@ -1,5 +1,5 @@
-import createMarkupStrategy from './creatMarkupStrategy';
-import mentionSearchStrategy from './mentionSearchStrategy';
+import createMarkupStrategy from './createMarkupStrategy';
+import createMarkupComponent from './createMarkupComponent';
 import { Map } from 'immutable';
 
 const callbacks = {
@@ -11,7 +11,7 @@ const callbacks = {
    onChange: Map(),
 };
 
-export default const markupPlugin = (config = {}) => {
+const markupPlugin = (config = {}) => {
    // Styles are overwritten instead of merged as merging causes a lot of confusion.
    //
    // Why? Because when merging a developer needs to know all of the underlying
@@ -27,8 +27,8 @@ export default const markupPlugin = (config = {}) => {
    const decorators = (config.rules || []).map(rule => {
       let { syntax, style } = rules;
       return {
-         createMarkupStrategy(syntax),
-         createMarkupComponent(style)
+         strategy: createMarkupStrategy(syntax),
+         component: createMarkupComponent(style)
       };
    });
 
@@ -66,3 +66,5 @@ export default const markupPlugin = (config = {}) => {
       },
    };
 };
+
+export default markupPlugin;
