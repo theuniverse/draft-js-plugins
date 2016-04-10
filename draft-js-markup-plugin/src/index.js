@@ -25,12 +25,11 @@ const markupPlugin = (config = {}) => {
    };*/
 
    const decorators = (config.rules || []).map(rule => {
-      let { syntax, style } = rules;
       return {
-         strategy: createMarkupStrategy(syntax),
-         component: createMarkupComponent(style)
+         strategy: createMarkupStrategy(rule.get('syntax')),
+         component: createMarkupComponent(rule.get('style'))
       };
-   });
+   }).toMutable();
 
    return {
       decorators: decorators,

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
 export default (style: string) => {
-   return class MentionSearch extends Component {
+   return class MarkupComponnt extends Component {
       render() {
          return (
-            <strong> style = { this.props.children } </strong>
+            <strong> { this.props.children } </strong>
          );
       };
    };
