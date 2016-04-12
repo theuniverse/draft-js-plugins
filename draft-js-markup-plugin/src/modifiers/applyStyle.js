@@ -1,30 +1,40 @@
 import { Modifier, EditorState } from 'draft-js';
 import getSearchText from '../utils/getSearchText';
 
-const applyStyle = (editorState, style) => {
+const applyStyle = (editorState, start, end, content, style) => {
   const currentSelectionState = editorState.getSelection();
-  const { begin, end } = getSearchText(editorState, currentSelectionState);
+  //const { begin, end } = getSearchText(editorState, currentSelectionState);
 
   // get selection of the @mention search text
-  const mentionTextSelection = currentSelectionState.merge({
-    anchorOffset: begin,
+  const removeTextSelection = currentSelectionState.merge({
+    anchorOffset: start,
     focusOffset: end,
   });
 
-  let mentionReplacedContent = Modifier.replaceText(
+  let styledTextReplacedContent = Modifier.replaceText(
     editorState.getCurrentContent(),
-    mentionTextSelection,
-    'hahaha',
-    null,
-    null
+    removeTextSelection,
+    content
+  );
+
+  const styledTextSelection = removeTextSelection.merge({
+    anchorOffset: start,
+    focusOffset: end - 2,
+    hasFocus: false
+  });
+
+  styledTextReplacedContent = Modifier.applyInlineStyle(
+    styledTextReplacedContent,
+    styledTextSelection,
+    style
   );
 
   const newEditorState = EditorState.push(
     editorState,
-    mentionReplacedContent,
+    styledTextReplacedContent,
     'insert-mention',
   );
-  return EditorState.forceSelection(newEditorState, mentionReplacedContent.getSelectionAfter());
+  return EditorState.forceSelection(newEditorState, styledTextReplacedContent.getSelectionAfter());
 };
 
-export default addMention;
+export default applyStyle;
