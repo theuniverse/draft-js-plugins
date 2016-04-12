@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+import { genKey } from 'draft-js';
+import decorateComponentWithProps from 'decorate-component-with-props';
 
-export default (style: string, syntax: Function) => {
-  return class MarkupComponnt extends Component {
+import getSearchText from './utils/getSearchText';
+
+export default (config = {}) => {
+  class MarkupComponnt extends Component {
     componentWillMount() {
+      this.key = genKey();
       this.props.callbacks.onChange = this.props.callbacks.onChange.set(this.key, this.onEditorStateChange);
     };
 
@@ -10,8 +15,11 @@ export default (style: string, syntax: Function) => {
       this.props.callbacks.onChange = this.props.callbacks.onChange.delete(this.key);
     };
 
-    onEditorStateChange() {
-
+    onEditorStateChange(editorState) {
+      const selection = editorState.getSelection();
+      const { word } = getSearchText(editorState, selection);
+      console.log(word);
+      return editorState;
     };
 
     render() {
@@ -20,4 +28,6 @@ export default (style: string, syntax: Function) => {
       );
     };
   };
+
+  return decorateComponentWithProps(MarkupComponnt, config);
 };

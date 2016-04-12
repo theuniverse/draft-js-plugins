@@ -25,9 +25,17 @@ const markupPlugin = (config = {}) => {
   };*/
 
   const decorators = (config.rules || []).map(rule => {
+    const style = rule.get('style');
+    const syntax = rule.get('syntax');
+    const markupComponentProps = {
+      syntax,
+      style,
+      callbacks
+    };
+
     return {
       strategy: createMarkupStrategy(rule.get('openSyntax')),
-      component: createMarkupComponent(rule.get('style'), rule.get('syntax'))
+      component: createMarkupComponent(markupComponentProps)
     };
   });
 
