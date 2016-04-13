@@ -1,9 +1,7 @@
 import { Modifier, EditorState } from 'draft-js';
-import getSearchText from '../utils/getSearchText';
 
 const applyStyle = (editorState, start, end, content, style) => {
   const currentSelectionState = editorState.getSelection();
-  //const { begin, end } = getSearchText(editorState, currentSelectionState);
 
   // get selection of the @mention search text
   const removeTextSelection = currentSelectionState.merge({
@@ -32,7 +30,7 @@ const applyStyle = (editorState, start, end, content, style) => {
   const newEditorState = EditorState.push(
     editorState,
     styledTextReplacedContent,
-    'insert-mention',
+    'apply-style',
   );
   return EditorState.forceSelection(newEditorState, styledTextReplacedContent.getSelectionAfter());
 };

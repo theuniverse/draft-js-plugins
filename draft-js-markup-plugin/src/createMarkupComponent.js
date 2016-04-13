@@ -3,7 +3,7 @@ import { genKey } from 'draft-js';
 import decorateComponentWithProps from 'decorate-component-with-props';
 
 import applyStyle from './modifiers/applyStyle';
-import getSearchText from './utils/getSearchText';
+import getBlockText from './utils/getBlockText';
 
 export default (config = {}) => {
   class MarkupComponnt extends Component {
@@ -12,8 +12,11 @@ export default (config = {}) => {
 
       const editorStateFunc = this.onEditorStateChange(this.props.syntax, this.props.style);
       this.props.callbacks.onChange = this.props.callbacks.onChange.set(this.key, editorStateFunc);
+    };
 
-      editorStateFunc(this.props.getEditorState());
+    componentDidMount() {
+      const editorStateFunc = this.onEditorStateChange(this.props.syntax, this.props.style);
+      this.props.updateEditorState(editorStateFunc(this.props.getEditorState()));
     };
 
     componentWillUnmount() {
@@ -23,7 +26,7 @@ export default (config = {}) => {
     onEditorStateChange(syntax, style) {
       return function(editorState) {
         const selection = editorState.getSelection();
-        const { word } = getSearchText(editorState, selection);
+        const word = getBlockText(editorState, selection);
 
         let matchArr;
         if ((matchArr = syntax.exec(word)) !== null) { // eslint-disable-line
