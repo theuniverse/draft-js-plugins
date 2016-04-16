@@ -2,6 +2,7 @@ import { Modifier, EditorState, RichUtils } from 'draft-js';
 
 const applyStyle = (editorState, start, end, content, style) => {
   const currentSelectionState = editorState.getSelection();
+  const currentInlineStyle = editorState.getCurrentInlineStyle();
   const cursorPos = currentSelectionState.getAnchorOffset();
 
   let styledContentState = Modifier.applyInlineStyle(
@@ -41,7 +42,17 @@ const applyStyle = (editorState, start, end, content, style) => {
     focusOffset: newCursorPos
   });
 
-  return EditorState.forceSelection(newEditorState, lastTextSelection);
+  const finalEditorState = EditorState.set(
+    EditorState.forceSelection(
+      newEditorState,
+      lastTextSelection
+    ),
+    {
+      inlineStyleOverride: currentInlineStyle
+    }
+  )
+
+  return finalEditorState;
 };
 
 export default applyStyle;
