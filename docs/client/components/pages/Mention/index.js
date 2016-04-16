@@ -46,7 +46,8 @@ export default class App extends Component {
         </Container>
         <AlternateContainer>
           <Heading level={ 2 }>Getting Started</Heading>
-          <Code code="npm install draft-js-mention-plugin --save" />
+          <Code code="npm install draft-js-plugins-editor@1.0.0-beta1 --save" />
+          <Code code="npm install draft-js-mention-plugin@1.0.0-beta1 --save" />
           <Code code={ gettingStarted } name="gettingStarted.js" />
           <Heading level={ 3 }>Importing the default styles</Heading>
           <p>
@@ -96,6 +97,16 @@ export default class App extends Component {
           <div className={ styles.param }>
             <span className={ styles.paramName }>mentions</span>
             <span>Immutable.js List of mentions.</span>
+          </div>
+          <div className={ styles.param }>
+            <span className={ styles.paramName }>entityMutability</span>
+            <span>Can be one of: "IMMUTABLE", "SEGMENTED" or "MUTABLE". Read in detail about it
+            <ExternalLink
+              href="https://facebook.github.io/draft-js/docs/advanced-topics-entities.html#mutability"
+            >
+              &nbsp;here
+            </ExternalLink>
+            </span>
           </div>
         </Container>
         <Container>
