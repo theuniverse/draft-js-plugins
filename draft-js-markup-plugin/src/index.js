@@ -34,7 +34,7 @@ const markupPlugin = (config = {}) => {
     };
 
     return {
-      strategy: createMarkupStrategy(rule.get('openSyntax')),
+      strategy: createMarkupStrategy(rule.get('syntax')),
       component: createMarkupComponent(markupComponentProps)
     };
   });

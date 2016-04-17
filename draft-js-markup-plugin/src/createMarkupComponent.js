@@ -9,9 +9,6 @@ export default (config = {}) => {
   class MarkupComponnt extends Component {
     componentWillMount() {
       this.key = genKey();
-
-      const editorStateFunc = this.onEditorStateChange(this.props.syntax, this.props.style);
-      this.props.callbacks.onChange = this.props.callbacks.onChange.set(this.key, editorStateFunc);
     };
 
     componentDidMount() {
@@ -20,7 +17,6 @@ export default (config = {}) => {
     };
 
     componentWillUnmount() {
-      this.props.callbacks.onChange = this.props.callbacks.onChange.delete(this.key);
     };
 
     onEditorStateChange(syntax, style) {

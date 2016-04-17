@@ -2,8 +2,8 @@
 
 import findWithRegex from 'find-with-regex';
 
-export default (openSyntax: Function) => {
+export default (syntax: Function) => {
    return (contentBlock: Object, callback: Function) => {
-     findWithRegex(openSyntax, contentBlock, callback);
+     findWithRegex(syntax, contentBlock, callback);
    };
 };
