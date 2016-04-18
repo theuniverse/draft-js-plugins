@@ -50,7 +50,7 @@ const applyStyle = (editorState, start, end, content, style) => {
     {
       inlineStyleOverride: currentInlineStyle
     }
-  )
+  );
 
   return finalEditorState;
 };
