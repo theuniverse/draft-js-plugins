@@ -35,7 +35,7 @@ export default (config = {}) => {
             return editorState;
           }
 
-          let endStyle = selectedBlock.getInlineStyleAt(start);
+          let endStyle = selectedBlock.getInlineStyleAt(end);
           if (endStyle.has('CODE')) {
             return editorState;
           }
