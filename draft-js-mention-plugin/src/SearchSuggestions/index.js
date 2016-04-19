@@ -38,11 +38,19 @@ export default class SearchSuggestions extends Component {
         });
       }
 
-      const visibleRect = this.props.store.getPortalClientRect(this.activeOffsetKey);
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-      this.refs.popover.style.top = `${visibleRect.top + scrollTop}px`;
-      this.refs.popover.style.left = `${visibleRect.left + scrollLeft}px`;
+      const decoratorRect = this.props.store.getPortalClientRect(this.activeOffsetKey);
+      const { top, left, width } = this.props.positionPopover(decoratorRect);
+      if (top) {
+        this.refs.popover.style.top = top;
+      }
+
+      if (left) {
+        this.refs.popover.style.left = left;
+      }
+
+      if (width) {
+        this.refs.popover.style.width = width;
+      }
     }
   };
 
@@ -237,11 +245,11 @@ export default class SearchSuggestions extends Component {
       return null;
     }
 
-    const { theme } = this.props;
+    const { theme = {} } = this.props;
     return (
       <div
         {...this.props}
-        className={ theme.get('autocomplete') }
+        className={ theme.autocomplete }
         role="listbox"
         id={ `mentions-list-${this.key}` }
         ref="popover"
