@@ -34,6 +34,15 @@ class PluginEditor extends Component {
   constructor(props) {
     super(props);
 
+    const plugins = [this.props, ...this.resolvePlugins()];
+    for (const plugin of plugins) {
+      if (typeof plugin.initialize !== 'function') continue;
+      plugin.initialize({
+        getEditorState: this.getEditorState,
+        setEditorState: this.onChange,
+      });
+    }
+
     // attach proxy methods like `focus` or `blur`
     for (const method of proxies) {
       this[method] = (...args) => (
@@ -119,7 +128,9 @@ class PluginEditor extends Component {
         if (result !== undefined) {
           styles = (styles ? (`${styles} `) : '') + result;
         }
-      } return styles || false;
+      }
+
+      return styles || false;
     }
 
     for (const plugin of plugins) {
@@ -200,27 +211,44 @@ class PluginEditor extends Component {
      ), {})
   );
 
-  render() {
-    let pluginProps = {};
+  resolveAccessibilityProps = () => {
+    let accessibilityProps = {};
+    const plugins = [this.props, ...this.resolvePlugins()];
+    for (const plugin of plugins) {
+      if (typeof plugin.getAccessibilityProps !== 'function') continue;
+      const props = plugin.getAccessibilityProps();
+      const popupProps = {};
 
-    // This puts pluginProps and the object inside getEditorProps
-    // on the Editor component (main use case is for aria props right now)
-    // Last plugin wins right now (not ideal)
-    this.props.plugins.forEach((plugin) => {
-      if (plugin.getEditorProps) {
-        pluginProps = {
-          ...pluginProps,
-          ...plugin.getEditorProps(),
-        };
+      if (accessibilityProps.ariaHasPopup === undefined) {
+        popupProps.ariaHasPopup = props.ariaHasPopup;
+      } else if (props.ariaHasPopup === 'true') {
+        popupProps.ariaHasPopup = 'true';
       }
-    });
 
+      if (accessibilityProps.ariaExpanded === undefined) {
+        popupProps.ariaExpanded = props.ariaExpanded;
+      } else if (props.ariaExpanded === 'true') {
+        popupProps.ariaExpanded = 'true';
+      }
+
+      accessibilityProps = {
+        ...accessibilityProps,
+        ...props,
+        ...popupProps,
+      };
+    }
+
+    return accessibilityProps;
+  };
+
+  render() {
     const pluginHooks = this.createPluginHooks();
     const customStyleMap = this.resolveCustomStyleMap();
+    const accessibilityProps = this.resolveAccessibilityProps();
     return (
       <Editor
         { ...this.props }
-        { ...pluginProps }
+        { ...accessibilityProps }
         { ...pluginHooks }
         customStyleMap={ customStyleMap }
         onChange={ this.onChange }

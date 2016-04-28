@@ -4,8 +4,8 @@ import unionClassNames from 'union-class-names';
 class WordCounter extends Component {
 
   static propTypes = {
-    editorState: PropTypes.any.isRequired,
     theme: PropTypes.any,
+    limit: PropTypes.number,
   };
 
   getWordCount(editorState) {
@@ -24,8 +24,8 @@ class WordCounter extends Component {
   }
 
   render() {
-    const { editorState, limit } = this.props;
-    const count = this.getWordCount(editorState);
+    const { store, limit } = this.props;
+    const count = this.getWordCount(store.getEditorState());
     const classNames = this.getClassNames(count, limit);
 
     return <span className={ classNames }>{count}</span>;
