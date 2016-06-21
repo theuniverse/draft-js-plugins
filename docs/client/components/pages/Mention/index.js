@@ -16,7 +16,6 @@ import customExampleEditorStylesCode from '!!../../../loaders/prism-loader?langu
 import customExampleMentionsStylesCode from '!!../../../loaders/prism-loader?language=css!./CustomMentionEditor/mentionsStyles.css';
 import remoteExampleCode from '!!../../../loaders/prism-loader?language=javascript!./RemoteMentionEditor';
 import remoteExampleEditorStylesCode from '!!../../../loaders/prism-loader?language=css!./RemoteMentionEditor/editorStyles.css';
-import gettingStarted from '!!../../../loaders/prism-loader?language=javascript!./gettingStarted';
 import SocialBar from '../../shared/SocialBar';
 import NavBar from '../../shared/NavBar';
 import Separator from '../../shared/Separator';
@@ -49,12 +48,12 @@ export default class App extends Component {
           <Heading level={ 2 }>Getting Started</Heading>
           <Code code="npm install draft-js-plugins-editor --save" />
           <Code code="npm install draft-js-mention-plugin --save" />
-          <Code code={ gettingStarted } name="gettingStarted.js" />
+          <Code code="Please checkout the 'Simple Example' further down the page." />
           <Heading level={ 3 }>Importing the default styles</Heading>
           <p>
             The plugin ships with a default styling available at this location in the installed package:
             &nbsp;
-            <InlineCode code={ 'node_modules/draft-js-hashtag-plugin/lib/plugin.css' } />
+            <InlineCode code={ 'node_modules/draft-js-mention-plugin/lib/plugin.css' } />
           </p>
           <Heading level={ 4 }>Webpack Usage</Heading>
           <ul className={ styles.list }>
@@ -77,7 +76,7 @@ export default class App extends Component {
           </ul>
           <Heading level={ 4 }>Browserify Usage</Heading>
           <p>
-            Please help, by submiting a Pull Request to the <ExternalLink href="https://github.com/draft-js-plugins/draft-js-plugins/blob/master/docs/client/components/pages/Hashtag/index.js">documention</ExternalLink>.
+            Please help, by submiting a Pull Request to the <ExternalLink href="https://github.com/draft-js-plugins/draft-js-plugins/blob/master/docs/client/components/pages/Mention/index.js">documentation</ExternalLink>.
           </p>
         </AlternateContainer>
         <Container>
@@ -129,6 +128,27 @@ export default class App extends Component {
           <div className={ styles.param }>
             <span className={ styles.paramName }>mentionPrefix</span>
             <span>By default it is an empty String. For Twitter or Slack like mention behaviour you can provide an `@`</span>
+          </div>
+          <Heading level={ 3 }>MentionSuggestions</Heading>
+          <div>
+            The MentionSuggestions component is part of the plugin and should placed somewhere in the
+            JSX after the Editor. It takes the following props:
+            <div className={ styles.param }>
+              <span className={ styles.paramName }>onSearchChange</span>
+              <span>A callback which is triggered whenever the search term changes. The first argument is an object which constains the search term in the property value.</span>
+            </div>
+            <div className={ styles.param }>
+              <span className={ styles.paramName }>suggestions</span>
+              <span>The list of suggestions to be shown.</span>
+            </div>
+            <div className={ styles.param }>
+              <span className={ styles.paramName }>onOpen</span>
+              <span>A callback which is triggered whenever the suggestions popover opens.</span>
+            </div>
+            <div className={ styles.param }>
+              <span className={ styles.paramName }>onClose</span>
+              <span>A callback which is triggered whenever the suggestions popover closes.</span>
+            </div>
           </div>
           <Heading level={ 3 }>Additional Exports</Heading>
           <div>

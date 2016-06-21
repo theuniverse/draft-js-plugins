@@ -4,6 +4,12 @@
 
 High quality plugins with great UX on top of [DraftJS](https://github.com/facebook/draft-js).
 
+[![Build Status](https://travis-ci.org/draft-js-plugins/draft-js-plugins.svg?branch=master)](https://travis-ci.org/draft-js-plugins/draft-js-plugins)
+
+## Important Note
+
+We currently prepare for a 2.0 beta. The `master` branch already contains unpublished features & plugins.
+
 ## Available Plugins
 
 - [Emoji](https://www.draft-js-plugins.com/plugin/emoji)
@@ -15,7 +21,12 @@ High quality plugins with great UX on top of [DraftJS](https://github.com/facebo
 - [Undo](https://www.draft-js-plugins.com/plugin/undo)
 - or build your own … :)
 
-[![Build Status](https://travis-ci.org/draft-js-plugins/draft-js-plugins.svg?branch=master)](https://travis-ci.org/draft-js-plugins/draft-js-plugins)
+### Built by the community
+
+- [Autolist](https://github.com/icelab/draft-js-autolist-plugin) by [Max Wheeler/Icelab](https://github.com/makenosound)
+- [Block Breakout](https://github.com/icelab/draft-js-block-breakout-plugin) by [Max Wheeler/Icelab](https://github.com/makenosound)
+- [Single Line](https://github.com/icelab/draft-js-single-line-plugin) by [Max Wheeler/Icelab](https://github.com/makenosound)
+- [RichButtons](https://github.com/jasonphillips/draft-js-richbuttons-plugin) by [jasonphillips](https://github.com/jasonphillips)
 
 ## Live Example & Documentation
 
@@ -99,7 +110,7 @@ Feel free to copy any of the existing plugins as a starting point. Feel free to 
 More documentation is coming soon…
 
 ## Discussion and Support
-Join the channel #draft-js-plugins after signing into the DraftJS [Slack organization](https://draftjs.herokuapp.com)!
+Join the channel #draft-js-plugins after signing into the DraftJS [Slack organization](https://draftjs.herokuapp.com) or check out or collection of frequently asked questions here: [FAQ](https://github.com/draft-js-plugins/draft-js-plugins/blob/master/FAQ.md).
 
 ## Development
 

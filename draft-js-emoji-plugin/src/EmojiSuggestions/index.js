@@ -39,6 +39,7 @@ export default class EmojiSuggestions extends Component {
         props: this.props,
         state: this.state,
         filteredEmojis: this.filteredEmojis,
+        popover: this.refs.popover,
       });
       Object.keys(newStyles).forEach((key) => {
         this.refs.popover.style[key] = newStyles[key];
@@ -227,12 +228,17 @@ export default class EmojiSuggestions extends Component {
     this.setState({
       isActive: true,
     });
+
+    if (this.props.onOpen) {
+      this.props.onOpen();
+    }
   };
 
   closeDropdown = () => {
     // make sure none of these callbacks are triggered
     this.props.callbacks.onDownArrow = undefined;
     this.props.callbacks.onUpArrow = undefined;
+    this.props.callbacks.onTab = undefined;
     this.props.callbacks.onEscape = undefined;
     this.props.callbacks.handleReturn = undefined;
     this.props.ariaProps.ariaHasPopup = 'false';
@@ -242,15 +248,19 @@ export default class EmojiSuggestions extends Component {
     this.setState({
       isActive: false,
     });
+
+    if (this.props.onClose) {
+      this.props.onClose();
+    }
   };
 
   render() {
     if (!this.state.isActive) {
-      return null;
+      return <noscript />;
     }
 
     this.filteredEmojis = this.getEmojisForFilter();
-    const { theme = {} } = this.props;
+    const { theme = {}, cacheBustParam, imagePath } = this.props;
     return (
       <div
         {...this.props}
@@ -270,8 +280,10 @@ export default class EmojiSuggestions extends Component {
               index={ index }
               id={ `emoji-option-${this.key}-${index}` }
               theme={ theme }
+              imagePath={ imagePath }
+              cacheBustParam={ cacheBustParam }
             />
-          ))
+          )).toJS()
         }
       </div>
     );

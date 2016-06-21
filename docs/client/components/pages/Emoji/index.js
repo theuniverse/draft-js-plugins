@@ -55,7 +55,7 @@ export default class App extends Component {
           <p>
             The plugin ships with a default styling available at this location in the installed package:
             &nbsp;
-            <InlineCode code={ 'node_modules/draft-js-hashtag-plugin/lib/plugin.css' } />
+            <InlineCode code={ 'node_modules/draft-js-emoji-plugin/lib/plugin.css' } />
           </p>
           <Heading level={ 4 }>Webpack Usage</Heading>
           <ul className={ styles.list }>
@@ -78,7 +78,7 @@ export default class App extends Component {
           </ul>
           <Heading level={ 4 }>Browserify Usage</Heading>
           <p>
-            Please help, by submiting a Pull Request to the <ExternalLink href="https://github.com/draft-js-plugins/draft-js-plugins/blob/master/docs/client/components/pages/Hashtag/index.js">documention</ExternalLink>.
+            Please help, by submiting a Pull Request to the <ExternalLink href="https://github.com/draft-js-plugins/draft-js-plugins/blob/master/docs/client/components/pages/Emoji/index.js">documentation</ExternalLink>.
           </p>
         </AlternateContainer>
         <Container>
@@ -120,7 +120,28 @@ export default class App extends Component {
           </div>
           <div className={ styles.param }>
             <span className={ styles.paramName }>positionSuggestions</span>
-            <span>The function can be used to manipulate the position of the popover containing the suggestions. It receives one object as arguments containing the visible rectangle surrounding the decorated search string including the @. In addition the object contains prevProps, prevState, state & props. An object should be returned which can contain all sorts of styles. The defined properties will be applied as inline-styles.</span>
+            <span>The function can be used to manipulate the position of the popover containing the suggestions. It receives one object as arguments containing the visible rectangle surrounding the decorated search string including the colon. In addition the object contains prevProps, prevState, state & props. An object should be returned which can contain all sorts of styles. The defined properties will be applied as inline-styles.</span>
+          </div>
+          <div className={ styles.param }>
+            <span className={ styles.paramName }>imagePath</span>
+            <span>The Emojis are displayed using SVGs. The full path is constructed of multiple parts like this: { '`${imagePath}${unicode}.svg${cacheBustParam}`' }. The default imagePath is: '//cdn.jsdelivr.net/emojione/assets/svg/', but can be overwritten with this config.</span>
+          </div>
+          <Heading level={ 3 }>EmojiSuggestions</Heading>
+          <div>
+            The EmojiSuggestions component is part of the plugin and should placed somewhere in the
+            JSX after the Editor. It takes the following props:
+            <div className={ styles.param }>
+              <span className={ styles.paramName }>onSearchChange</span>
+              <span>A callback which is triggered whenever the search term changes. The first argument is an object which constains the search term in the property value.</span>
+            </div>
+            <div className={ styles.param }>
+              <span className={ styles.paramName }>onOpen</span>
+              <span>A callback which is triggered whenever the suggestions popover opens.</span>
+            </div>
+            <div className={ styles.param }>
+              <span className={ styles.paramName }>onClose</span>
+              <span>A callback which is triggered whenever the suggestions popover closes.</span>
+            </div>
           </div>
         </Container>
         <Container>

@@ -26,6 +26,12 @@ export default class MentionSuggestions extends Component {
     this.props.callbacks.onChange = this.onEditorStateChange;
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.suggestions.size === 0 && this.state.isActive) {
+      this.closeDropdown();
+    }
+  }
+
   componentDidUpdate = (prevProps, prevState) => {
     if (this.refs.popover) {
       // In case the list shrinks there should be still an option focused.
@@ -45,6 +51,7 @@ export default class MentionSuggestions extends Component {
         prevState,
         props: this.props,
         state: this.state,
+        popover: this.refs.popover,
       });
       Object.keys(newStyles).forEach((key) => {
         this.refs.popover.style[key] = newStyles[key];
@@ -223,12 +230,17 @@ export default class MentionSuggestions extends Component {
     this.setState({
       isActive: true,
     });
+
+    if (this.props.onOpen) {
+      this.props.onOpen();
+    }
   };
 
   closeDropdown = () => {
     // make sure none of these callbacks are triggered
     this.props.callbacks.onDownArrow = undefined;
     this.props.callbacks.onUpArrow = undefined;
+    this.props.callbacks.onTab = undefined;
     this.props.callbacks.onEscape = undefined;
     this.props.callbacks.handleReturn = undefined;
     this.props.ariaProps.ariaHasPopup = 'false';
@@ -238,11 +250,15 @@ export default class MentionSuggestions extends Component {
     this.setState({
       isActive: false,
     });
+
+    if (this.props.onClose) {
+      this.props.onClose();
+    }
   };
 
   render() {
     if (!this.state.isActive) {
-      return null;
+      return <noscript />;
     }
 
     const { theme = {} } = this.props;
@@ -266,7 +282,7 @@ export default class MentionSuggestions extends Component {
               id={ `mention-option-${this.key}-${index}` }
               theme={ theme }
             />
-          ))
+          )).toJS()
         }
       </div>
     );

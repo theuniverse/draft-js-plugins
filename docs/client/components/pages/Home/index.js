@@ -168,7 +168,7 @@ export default class App extends Component {
             <ul>
               <li>Stickers</li>
               <li>Hashtags</li>
-              <li>Linkfiy (automatically turns links into a-tags)</li>
+              <li>Linkify (automatically turns links into a-tags)</li>
               <li>Mentions</li>
               <li>Emojis</li>
             </ul>
@@ -219,7 +219,7 @@ export default class App extends Component {
             </div>
             <div className={ styles.teamMember }>
               <ExternalLink className={ styles.teamTwitterLink } href="https://twitter.com/adrianmcli">
-                <img className={ styles.teamImage } src="https://pbs.twimg.com/profile_images/720415599696941056/-lvaKPKw_200x200.jpg" role="presentation" />
+                <img className={ styles.teamImage } src="https://pbs.twimg.com/profile_images/728033627003625474/XY7U8ZP8_bigger.jpg" role="presentation" />
                 <div>Adrian Li</div>
               </ExternalLink>
             </div>
@@ -235,6 +235,10 @@ export default class App extends Component {
           <Heading level={ 2 }>Discussion and Support</Heading>
           <p className={ styles.center }>
             Join the <b>#draft-js-plugins</b> channel after signing up to the <ExternalLink href="https://draftjs.herokuapp.com">DraftJS Slack organization</ExternalLink>
+          &nbsp;or check out or collection of frequently asked questions here:&nbsp;
+            <ExternalLink href="https://github.com/draft-js-plugins/draft-js-plugins/blob/master/FAQ.md">
+              FAQ
+            </ExternalLink>.
           </p>
           <Heading level={ 2 }>Stay Informed</Heading>
             <p className={ styles.center }>
