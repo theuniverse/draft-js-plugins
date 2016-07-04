@@ -19,7 +19,7 @@ npm start
 
 ## Linting
 
-We follow the [Airbnb JavaScript Styleguide ](https://github.com/airbnb/javascript) with a few exeptions. Checkout the [.eslintrc](https://github.com/draft-js-plugins/draft-js-plugins/blob/master/.eslintrc), [.jscsrc](https://github.com/draft-js-plugins/draft-js-plugins/blob/master/.jscsrc) and [.flowconfig](https://github.com/draft-js-plugins/draft-js-plugins/blob/master/.flowconfig) to see the rules. With running this command you can check if your code-changes comply to the style we chose:
+We follow the [Airbnb JavaScript Styleguide ](https://github.com/airbnb/javascript) with a few exeptions. Checkout the [.eslintrc](https://github.com/draft-js-plugins/draft-js-plugins/blob/master/.eslintrc) and [.flowconfig](https://github.com/draft-js-plugins/draft-js-plugins/blob/master/.flowconfig) to see the rules. With running this command you can check if your code-changes comply to the style we chose:
 
 ```sh
 npm run lint
@@ -52,3 +52,7 @@ We are also happy about updates to the documentation in combination with changes
 Run `./scripts/publishGithubPages.sh`
 
 The `build` script renames the .babelrc files of all plugins to avoid issues with the build. In the future we might be able to remove this again.
+
+## Publishing NPM Package as Beta
+
+Go into the package and run `npm publish --tag beta`

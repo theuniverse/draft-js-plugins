@@ -5,7 +5,7 @@ import Link from './Link';
 import styles from './styles.css';
 import airToolbarHandler from './air-toolbar';
 
-const toolbarPlugin = config => {
+const toolbarPlugin = (config = {}) => {
   const theme = config.theme || styles;
   const toolbarHandler = config.toolbarHandler || { ...airToolbarHandler, ...config };
   return {
@@ -29,7 +29,8 @@ const toolbarPlugin = config => {
       return editorState;
     },
     // Wrap all block-types in hover-toolbar decorator
-    blockRendererFn: (contentBlock, { }) => ({
+    // TODO investigate if we can avoid this pattern
+    blockRendererFn: (contentBlock, {}) => ({ // eslint-disable-line no-empty-pattern
       props: {
         toolbarHandler
       }
